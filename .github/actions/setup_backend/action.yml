@@ -9,6 +9,10 @@ inputs:
     description: 'Plone Version'
     required: true
     default: '6.1.0'
+  working-directory:
+    description: 'Working directory to use'
+    required: false
+    default: 'backend'
 runs:
   using: "composite"
   steps:
@@ -20,6 +24,7 @@ runs:
 
     - name: Restore uv cache
       uses: actions/cache@v4
+      working-directory: ${{ inputs.working-directory }}
       with:
         path: ${{ env.UV_CACHE_DIR }}
         key: uv-${{ runner.os }}-${{ inputs.python-version }}-${{ inputs.plone-version }}-${{ hashFiles('pyproject.toml') }}
@@ -28,6 +33,7 @@ runs:
           uv-${{ runner.os }}-${{ inputs.python-version }}-${{ inputs.plone-version }}
 
     - name: Install Plone and package
+      working-directory: ${{ inputs.working-directory }}
       shell: bash
       run: make install
       env:

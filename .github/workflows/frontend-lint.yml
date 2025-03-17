@@ -1,0 +1,30 @@
+name: "Frontend: Lint codebase"
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: true
+        type: string
+      working-directory:
+        required: false
+        default: backend
+        type: string
+
+jobs:
+  code-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout codebase
+        uses: actions/checkout@v4
+
+      - name: Setup Frontend
+        uses: kitconcept/meta/.github/actions/setup_frontend@main
+        with:
+            node-version: ${{ inputs.node-version }}
+            working-directory: ${{ inputs.working-directory }}
+
+      - name: Linting
+        id: lint
+        working-directory: ${{ inputs.working-directory }}
+        run: make lint

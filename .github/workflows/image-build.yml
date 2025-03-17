@@ -110,6 +110,7 @@ jobs:
             file: ${{ inputs.working-directory }}/${{ inputs.dockerfile }}
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
+            push: true
             build-args: ${{ inputs.build-args }}
 
       - name: Upload artifact

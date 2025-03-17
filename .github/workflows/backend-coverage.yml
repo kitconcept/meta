@@ -16,7 +16,7 @@ on:
 
 jobs:
 
-  test:
+  coverage:
     runs-on: ubuntu-latest
     env:
       PYTHON_VERSION: ${{ inputs.python-version }}
@@ -32,4 +32,10 @@ jobs:
 
         - name: Run tests
           working-directory: ${{ inputs.working-directory }}
-          run: make test
+          run: make test-coverage
+
+        - name: Report Coverage
+          working-directory: ${{ inputs.working-directory }}
+          run: |
+            echo "# Coverage Report" >> $GITHUB_STEP_SUMMARY
+            echo "$(uv run coverage report --format markdown)" >> $GITHUB_STEP_SUMMARY

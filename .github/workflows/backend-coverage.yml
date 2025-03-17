@@ -23,6 +23,9 @@ jobs:
       PLONE_VERSION: ${{ inputs.plone-version }}
     steps:
 
+        - name: Checkout
+          uses: actions/checkout@v4
+
         - name: Setup Backend
           uses: kitconcept/meta/.github/actions/setup_backend@main
           with:

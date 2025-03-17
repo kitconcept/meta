@@ -24,7 +24,7 @@ jobs:
     steps:
 
         - name: Setup Backend
-          uses: ./.github/actions/setup_backend
+          uses: kitconcept/meta/.github/actions/setup_backend@main
           with:
             python-version: ${{ inputs.python-version }}
             plone-version: ${{ inputs.plone-version }}

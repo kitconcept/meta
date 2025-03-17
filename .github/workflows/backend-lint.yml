@@ -9,10 +9,10 @@ on:
       plone-version:
         required: true
         type: string
-
-defaults:
-  run:
-    working-directory: backend
+      working-directory:
+        required: false
+        default: backend
+        type: string
 
 jobs:
 
@@ -31,26 +31,31 @@ jobs:
         - name: Check formatting
           if: ${{ success() || failure() }}
           id: ruff-format
+          working-directory: ${{ inputs.working-directory }}
           run: uvx ruff@latest format --diff
 
         - name: Check lint
           if: ${{ success() || failure() }}
           id: ruff-lint
+          working-directory: ${{ inputs.working-directory }}
           run: uvx ruff@latest check --diff
 
         - name: Check XML / ZCML
           if: ${{ success() || failure() }}
           id: zpretty
+          working-directory: ${{ inputs.working-directory }}
           run: uvx zpretty@latest --check src
 
         - name: Check Package Metadata
           if: ${{ success() || failure() }}
           id: pyroma
+          working-directory: ${{ inputs.working-directory }}
           run: uvx pyroma@latest -d .
 
         - name: Check Python Versions
           if: ${{ success() || failure() }}
           id: py-versions
+          working-directory: ${{ inputs.working-directory }}
           run: uvx check-python-versions@latest .
 
         - name: Report

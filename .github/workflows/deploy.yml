@@ -1,0 +1,59 @@
+name: Deploy project
+
+on:
+  workflow_call:
+    inputs:
+      registry:
+        required: true
+        type: string
+      username:
+        required: true
+        type: string
+      tag:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+      stack-name:
+        required: true
+        type: string
+      stack-file:
+        required: true
+        type: string
+    secrets:
+        password:
+          required: true
+        remote-host:
+          required: true
+        remote-port:
+          required: true
+        remote-user:
+          required: true
+        remote-private-key:
+          required: true
+        env-file:
+          required: false
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to cluster
+        uses: kitconcept/docker-stack-deploy@v1.2.0
+        with:
+          registry: ${{ inputs.registry }}
+          username: ${{ inputs.username }}
+          password: ${{ secrets.password }}
+          remote_host: ${{ secrets.remote-host }}
+          remote_port: ${{ secrets.remote-port }}
+          remote_user: ${{ secrets.remote-user }}
+          remote_private_key: ${{ secrets.remote-private-key }}
+          stack_file: ${{ inputs.stack-file }}
+          stack_name: ${{ inputs.stack-name }}
+          stack_param: ${{ inputs.tag }}
+          env_file: ${{ secrets.env-file }}
+          deploy_timeout: 480

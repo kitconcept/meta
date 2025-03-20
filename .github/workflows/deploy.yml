@@ -45,6 +45,7 @@ jobs:
 
       - name: Test vars
         run: |
+          echo "tag=${{ inputs.tag }}"
           echo "environment=${{ inputs.environment }}"
           echo "registry=${{ inputs.registry }}"
           echo "username=${{ inputs.username }}"

@@ -43,6 +43,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Test vars
+        run: |
+          echo "environment=${{ inputs.environment }}"
+          echo "registry=${{ inputs.registry }}"
+          echo "username=${{ inputs.username }}"
+          echo "stack_file=${{ inputs.stack-file }}"
+          echo "stack_name=${{ inputs.stack-name }}"
+
       - name: Deploy to cluster
         uses: kitconcept/docker-stack-deploy@v1.2.0
         with:

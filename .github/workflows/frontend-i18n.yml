@@ -8,7 +8,7 @@ on:
         type: string
       working-directory:
         required: false
-        default: backend
+        default: frontend
         type: string
 
 jobs:

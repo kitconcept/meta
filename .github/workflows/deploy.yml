@@ -21,6 +21,10 @@ on:
       stack-file:
         required: true
         type: string
+      scale-after:
+        required: false
+        type: string
+        default: ""
     secrets:
         password:
           required: true
@@ -49,11 +53,12 @@ jobs:
           echo "environment=${{ inputs.environment }}"
           echo "registry=${{ inputs.registry }}"
           echo "username=${{ inputs.username }}"
-          echo "stack_file=${{ inputs.stack-file }}"
-          echo "stack_name=${{ inputs.stack-name }}"
+          echo "stack-file=${{ inputs.stack-file }}"
+          echo "stack-name=${{ inputs.stack-name }}"
+          echo "scale-after=${{ inputs.scale-after }}"
 
       - name: Deploy to cluster
-        uses: kitconcept/docker-stack-deploy@v1.2.0
+        uses: kitconcept/docker-stack-deploy@1cd6c45b8147a0084cb1468dc5f28481eb4a0087
         with:
           registry: ${{ inputs.registry }}
           username: ${{ inputs.username }}
@@ -67,3 +72,4 @@ jobs:
           stack_param: ${{ inputs.tag }}
           env_file: ${{ secrets.env-file }}
           deploy_timeout: 480
+          scale_after: ${{ inputs.scale-after }}

@@ -159,7 +159,7 @@ jobs:
         if: ${{ inputs.push }}
         uses: actions/upload-artifact@v4
         with:
-          name: digests-${{ steps.vars.outputs.platform_pair }}
+          name: digests-${{ inputs.image-name-suffix }}-${{ steps.vars.outputs.platform_pair }}
           path: ${{ runner.temp }}/digests/*
           if-no-files-found: error
           retention-days: 1
@@ -181,7 +181,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ${{ runner.temp }}/digests
-          pattern: digests-*
+          pattern: digests-${{ inputs.image-name-suffix }}*
           merge-multiple: true
 
       - name: Set up Docker Buildx

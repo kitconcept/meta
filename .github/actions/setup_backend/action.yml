@@ -4,11 +4,11 @@ inputs:
   python-version:
     description: 'Python Version'
     required: true
-    default: '3.12'
+    default: '3.14'
   plone-version:
     description: 'Plone Version'
     required: true
-    default: '6.1.0'
+    default: '6.2.1'
   working-directory:
     description: 'Working directory to use'
     required: false

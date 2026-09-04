@@ -190,7 +190,8 @@ targets.
 
 Builds a container image with Buildx and pushes it to a registry, using a registry
 backed build cache. The image is tagged with the value of `base-tag` and with the
-tags derived by `docker/metadata-action`.
+tags derived by `docker/metadata-action`. QEMU is set up before the build, so
+`platforms` may name architectures other than the runner's.
 
 #### Inputs
 
@@ -201,7 +202,7 @@ tags derived by `docker/metadata-action`.
 | `image-name-prefix` | yes | — | First part of the image name |
 | `image-name-suffix` | yes | — | Second part of the image name, joined with a dash |
 | `image-cache-suffix` | no | `buildcache` | Prefix for the registry cache tag |
-| `platforms` | no | `linux/amd64` | Declared but currently not passed to the build step |
+| `platforms` | no | `linux/amd64` | Target platforms for the build, comma separated, for example `linux/amd64,linux/arm64` |
 | `dockerfile` | no | `Dockerfile` | Dockerfile path, relative to `working-directory` |
 | `registry` | no | `ghcr.io` | Registry to log into |
 | `build-args` | no | `""` | Build arguments forwarded to the build |

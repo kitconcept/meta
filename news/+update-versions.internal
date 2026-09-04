@@ -1,0 +1,1 @@
+Updated all third-party GitHub Action pins to their latest major versions, raised the default Python (3.14), Node.js (24.x) and Plone (6.2.1) versions, and added the Dependabot configuration that keeps these pins current. @ericof

@@ -16,6 +16,19 @@ on:
 
 jobs:
 
+  deprecation-notice:
+    name: Deprecated
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report deprecation
+        run: |
+          MESSAGE="This workflow is deprecated and will be removed. Use plone/meta/.github/workflows/backend-lint.yml@2.x instead."
+          echo "::warning title=Deprecated workflow::${MESSAGE}"
+          {
+            echo "> [!WARNING]"
+            echo "> ${MESSAGE}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
   lint:
     runs-on: ubuntu-latest
     steps:

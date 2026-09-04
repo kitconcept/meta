@@ -9,9 +9,50 @@ Plone monorepo projects. They assume a repository laid out with a `backend/` and
 Everything here is referenced at `@main`, so changes land on every consumer as soon
 as they are merged.
 
+## Deprecation
+
+> [!WARNING]
+> Everything in this repository except [`deploy.yml`](#deployyml) is **deprecated**.
+> Use [`plone/meta`](https://github.com/plone/meta) instead, referenced at `@2.x`.
+> The deprecated workflows and actions still run, but each one now emits a warning
+> annotation and a note in the job summary. They will be removed.
+>
+> `deploy.yml` is **not** deprecated: `plone/meta` has no Docker Swarm deployment
+> counterpart, so it remains the supported way to deploy.
+
+### Migrating
+
+| This repository | Replacement in `plone/meta@2.x` |
+| --- | --- |
+| `.github/actions/setup_backend` | `.github/actions/setup_backend_uv` |
+| `.github/actions/setup_frontend` | `.github/actions/setup_frontend` |
+| `.github/workflows/backend-lint.yml` | `.github/workflows/backend-lint.yml` |
+| `.github/workflows/backend-test.yml` | `.github/workflows/backend-pytest.yml` |
+| `.github/workflows/backend-coverage.yml` | `.github/workflows/backend-pytest-coverage.yml` |
+| `.github/workflows/frontend-lint.yml` | `.github/workflows/frontend-code.yml` |
+| `.github/workflows/frontend-test.yml` | `.github/workflows/frontend-unit.yml` |
+| `.github/workflows/frontend-i18n.yml` | `.github/workflows/frontend-i18n.yml` |
+| `.github/workflows/docs.yml` | `.github/workflows/docs-build.yml` |
+| `.github/workflows/image-build.yml` | `.github/workflows/container-image-build-push.yml` |
+| `.github/workflows/deploy.yml` | none, keep using this one |
+
+The replacements are equivalent in purpose but not always drop-in:
+
+- `plone/meta` defaults `working-directory` to `.` rather than `backend` or
+  `frontend`, so a monorepo has to pass it explicitly.
+- The backend test and coverage workflows here run `make test` and
+  `make test-coverage`; the `plone/meta` ones invoke `pytest` directly.
+- `container-image-build-push.yml` takes an additional required `push` input.
+- `backend-lint.yml` and `docs-build.yml` in `plone/meta` accept extra inputs, such
+  as pinned tool versions and optional Vale checks.
+
+
 ## Composite actions
 
 ### `setup_backend`
+
+> [!WARNING]
+> Deprecated. Use `plone/meta/.github/actions/setup_backend_uv@2.x` instead.
 
 Installs `uv`, restores the `uv` cache and installs Plone plus the project package by
 running `make install` in the working directory.
@@ -36,6 +77,9 @@ A `Makefile` in the working directory with an `install` target. It receives
 `PYTHON_VERSION` and `PLONE_VERSION` in the environment.
 
 ### `setup_frontend`
+
+> [!WARNING]
+> Deprecated. Use `plone/meta/.github/actions/setup_frontend@2.x` instead.
 
 Sets up Node.js, enables `corepack`, restores the `pnpm` store cache and installs the
 project dependencies by running `make install` in the working directory.
@@ -62,21 +106,24 @@ A `Makefile` in the working directory with an `install` target, and a
 
 ## Reusable Workflows
 
-| Workflow | Purpose |
-| --- | --- |
-| [`backend-lint.yml`](#backend-lintyml) | Lint and check metadata of the Python codebase |
-| [`backend-test.yml`](#backend-testyml) | Run the backend test suite |
-| [`backend-coverage.yml`](#backend-coverageyml) | Run the backend suite with coverage reporting |
-| [`frontend-lint.yml`](#frontend-lintyml) | Lint the frontend codebase |
-| [`frontend-test.yml`](#frontend-testyml) | Run the frontend test suite |
-| [`frontend-i18n.yml`](#frontend-i18nyml) | Check that translations are up to date |
-| [`docs.yml`](#docsyml) | Build the documentation and check for broken links |
-| [`image-build.yml`](#image-buildyml) | Build and publish a container image |
-| [`deploy.yml`](#deployyml) | Deploy a stack to a Docker Swarm cluster |
+| Workflow | Purpose | Status |
+| --- | --- | --- |
+| [`backend-lint.yml`](#backend-lintyml) | Lint and check metadata of the Python codebase | Deprecated |
+| [`backend-test.yml`](#backend-testyml) | Run the backend test suite | Deprecated |
+| [`backend-coverage.yml`](#backend-coverageyml) | Run the backend suite with coverage reporting | Deprecated |
+| [`frontend-lint.yml`](#frontend-lintyml) | Lint the frontend codebase | Deprecated |
+| [`frontend-test.yml`](#frontend-testyml) | Run the frontend test suite | Deprecated |
+| [`frontend-i18n.yml`](#frontend-i18nyml) | Check that translations are up to date | Deprecated |
+| [`docs.yml`](#docsyml) | Build the documentation and check for broken links | Deprecated |
+| [`image-build.yml`](#image-buildyml) | Build and publish a container image | Deprecated |
+| [`deploy.yml`](#deployyml) | Deploy a stack to a Docker Swarm cluster | Supported |
 
 None of these workflows declare `outputs`.
 
 ### `backend-lint.yml`
+
+> [!WARNING]
+> Deprecated. Use `plone/meta/.github/workflows/backend-lint.yml@2.x` instead.
 
 Runs `ruff format --diff`, `ruff check --diff`, `zpretty --check src`, `pyroma` and
 `check-python-versions`, then writes a summary. Each check runs even if an earlier one
@@ -103,6 +150,9 @@ jobs:
 
 ### `backend-test.yml`
 
+> [!WARNING]
+> Deprecated. Use `plone/meta/.github/workflows/backend-pytest.yml@2.x` instead.
+
 Sets up the backend and runs `make test`.
 
 #### Inputs
@@ -118,6 +168,9 @@ Sets up the backend and runs `make test`.
 A `test` target in the backend `Makefile`.
 
 ### `backend-coverage.yml`
+
+> [!WARNING]
+> Deprecated. Use `plone/meta/.github/workflows/backend-pytest-coverage.yml@2.x` instead.
 
 Sets up the backend, runs `make test-coverage` and appends a Markdown coverage report
 to the job summary.
@@ -137,6 +190,9 @@ A `test-coverage` target in the backend `Makefile`, and `coverage` available thr
 
 ### `frontend-lint.yml`
 
+> [!WARNING]
+> Deprecated. Use `plone/meta/.github/workflows/frontend-code.yml@2.x` instead.
+
 Sets up the frontend and runs `make lint`.
 
 #### Inputs
@@ -147,6 +203,9 @@ Sets up the frontend and runs `make lint`.
 | `working-directory` | no | `frontend` | Directory the lint runs in |
 
 ### `frontend-test.yml`
+
+> [!WARNING]
+> Deprecated. Use `plone/meta/.github/workflows/frontend-unit.yml@2.x` instead.
 
 Sets up the frontend and runs `make test`.
 
@@ -159,6 +218,9 @@ Sets up the frontend and runs `make test`.
 
 ### `frontend-i18n.yml`
 
+> [!WARNING]
+> Deprecated. Use `plone/meta/.github/workflows/frontend-i18n.yml@2.x` instead.
+
 Sets up the frontend and runs `make ci-i18n`, which fails when the translation files
 are out of sync with the source.
 
@@ -170,6 +232,9 @@ are out of sync with the source.
 | `working-directory` | no | `frontend` | Directory the check runs in |
 
 ### `docs.yml`
+
+> [!WARNING]
+> Deprecated. Use `plone/meta/.github/workflows/docs-build.yml@2.x` instead.
 
 Installs the documentation dependencies with `uv`, runs `make linkcheckbroken` and
 then `make build`.
@@ -187,6 +252,9 @@ A `Makefile` in the working directory with `install`, `linkcheckbroken` and `bui
 targets.
 
 ### `image-build.yml`
+
+> [!WARNING]
+> Deprecated. Use `plone/meta/.github/workflows/container-image-build-push.yml@2.x` instead.
 
 Builds a container image with Buildx and pushes it to a registry, using a registry
 backed build cache. The image is tagged with the value of `base-tag` and with the

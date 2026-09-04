@@ -16,6 +16,16 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Report deprecation
+      shell: bash
+      run: |
+        MESSAGE="This action is deprecated and will be removed. Use plone/meta/.github/actions/setup_backend_uv@2.x instead."
+        echo "::warning title=Deprecated action::${MESSAGE}"
+        {
+          echo "> [!WARNING]"
+          echo "> ${MESSAGE}"
+        } >> "$GITHUB_STEP_SUMMARY"
+
     - name: Install the latest version of uv
       uses: astral-sh/setup-uv@v10.0.1
       with:

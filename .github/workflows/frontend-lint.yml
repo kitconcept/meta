@@ -12,6 +12,19 @@ on:
         type: string
 
 jobs:
+
+  deprecation-notice:
+    name: Deprecated
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report deprecation
+        run: |
+          MESSAGE="This workflow is deprecated and will be removed. Use plone/meta/.github/workflows/frontend-code.yml@2.x instead."
+          echo "::warning title=Deprecated workflow::${MESSAGE}"
+          {
+            echo "> [!WARNING]"
+            echo "> ${MESSAGE}"
+          } >> "$GITHUB_STEP_SUMMARY"
   code-analysis:
     runs-on: ubuntu-latest
     steps:

@@ -4,11 +4,11 @@ inputs:
   python-version:
     description: 'Python Version'
     required: true
-    default: '3.12'
+    default: '3.14'
   plone-version:
     description: 'Plone Version'
     required: true
-    default: '6.1.0'
+    default: '6.2.1'
   working-directory:
     description: 'Working directory to use'
     required: false
@@ -16,14 +16,24 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Report deprecation
+      shell: bash
+      run: |
+        MESSAGE="This action is deprecated and will be removed. Use plone/meta/.github/actions/setup_backend_uv@2.x instead."
+        echo "::warning title=Deprecated action::${MESSAGE}"
+        {
+          echo "> [!WARNING]"
+          echo "> ${MESSAGE}"
+        } >> "$GITHUB_STEP_SUMMARY"
+
     - name: Install the latest version of uv
-      uses: astral-sh/setup-uv@v5
+      uses: astral-sh/setup-uv@v10.0.1
       with:
         python-version: ${{ inputs.python-version }}
         enable-cache: false
 
     - name: Restore uv cache
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ${{ env.UV_CACHE_DIR }}
         key: uv-${{ runner.os }}-${{ inputs.python-version }}-${{ inputs.plone-version }}-${{ hashFiles('pyproject.toml') }}

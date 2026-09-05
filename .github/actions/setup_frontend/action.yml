@@ -4,11 +4,11 @@ inputs:
   node-version:
     description: 'Node Version'
     required: true
-    default: '22.x'
+    default: '24.x'
   plone-version:
     description: 'Plone Version'
     required: true
-    default: '6.1.0'
+    default: '6.2.1'
   working-directory:
     description: 'Working directory to use'
     required: false
@@ -17,8 +17,18 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Report deprecation
+      shell: bash
+      run: |
+        MESSAGE="This action is deprecated and will be removed. Use plone/meta/.github/actions/setup_frontend@2.x instead."
+        echo "::warning title=Deprecated action::${MESSAGE}"
+        {
+          echo "> [!WARNING]"
+          echo "> ${MESSAGE}"
+        } >> "$GITHUB_STEP_SUMMARY"
+
     - name: Use Node.js ${{ inputs.node-version }}
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v7
       with:
         node-version: ${{ inputs.node-version }}
 
@@ -35,7 +45,7 @@ runs:
       run: |
         echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-    - uses: actions/cache@v4
+    - uses: actions/cache@v6
       name: Setup pnpm cache
       with:
         path: ${{ env.STORE_PATH }}

@@ -1,0 +1,1 @@
+Documented every composite action and reusable workflow in the README, including their inputs, secrets, defaults and the Makefile targets each one expects. @ericof

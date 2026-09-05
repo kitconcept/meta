@@ -1,0 +1,1 @@
+Pass the `platforms` input of the image build workflow through to the build step. It was declared and defaulted, but never forwarded, so images were always built for the runner architecture only. @ericof

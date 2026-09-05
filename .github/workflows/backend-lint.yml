@@ -16,15 +16,28 @@ on:
 
 jobs:
 
+  deprecation-notice:
+    name: Deprecated
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report deprecation
+        run: |
+          MESSAGE="This workflow is deprecated and will be removed. Use plone/meta/.github/workflows/backend-lint.yml@2.x instead."
+          echo "::warning title=Deprecated workflow::${MESSAGE}"
+          {
+            echo "> [!WARNING]"
+            echo "> ${MESSAGE}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
   lint:
     runs-on: ubuntu-latest
     steps:
 
         - name: Checkout
-          uses: actions/checkout@v4
+          uses: actions/checkout@v7
 
         - name: Install the latest version of uv
-          uses: astral-sh/setup-uv@v5
+          uses: astral-sh/setup-uv@v10.0.1
           with:
             python-version: ${{ inputs.python-version }}
 

@@ -6,13 +6,26 @@ on:
       python-version:
         required: false
         type: string
-        default: "3.12"
+        default: "3.14"
       working-directory:
         required: false
         type: string
         default: docs
 
 jobs:
+
+  deprecation-notice:
+    name: Deprecated
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report deprecation
+        run: |
+          MESSAGE="This workflow is deprecated and will be removed. Use plone/meta/.github/workflows/docs-build.yml@2.x instead."
+          echo "::warning title=Deprecated workflow::${MESSAGE}"
+          {
+            echo "> [!WARNING]"
+            echo "> ${MESSAGE}"
+          } >> "$GITHUB_STEP_SUMMARY"
   docs:
     name: Documentation
     runs-on: ubuntu-latest
@@ -20,16 +33,16 @@ jobs:
       run:
         working-directory: ${{ inputs.working-directory }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v10.0.1
         with:
           python-version: ${{ inputs.python-version }}
           enable-cache: false
 
       - name: Restore uv cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ env.UV_CACHE_DIR }}
           key: uv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('uv.lock') }}

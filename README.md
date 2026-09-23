@@ -317,6 +317,7 @@ secrets.
 | `environment` | yes | — | GitHub environment the job runs in |
 | `stack-name` | yes | — | Name of the Swarm stack |
 | `stack-file` | yes | — | Path to the stack compose file |
+| `env-vars` | no | `""` | Extra environment variables for the stack, one `NAME=VALUE` per line |
 
 #### Secrets
 
@@ -328,6 +329,19 @@ secrets.
 | `remote-user` | yes | SSH user |
 | `remote-private-key` | yes | SSH private key |
 | `env-file` | no | Contents of an environment file for the stack |
+
+#### Environment variables
+
+`env-vars` and `env-file` are combined and passed to the stack together. Both use
+the same format: one `NAME=VALUE` per line, with blank lines and `#` comments
+skipped. Any other line fails the deploy, and values are taken verbatim, so quotes
+become part of the value.
+
+- **`env-file` wins on a name clash.** A variable set in both takes its value from
+  the secret.
+- **`env-vars` is not masked.** It is written in the caller's workflow and can show
+  up in logs, so keep it to non-sensitive values. Anything secret belongs in
+  `env-file`.
 
 #### Example
 
@@ -342,10 +356,14 @@ jobs:
       environment: production
       stack-name: my-project
       stack-file: devops/stacks/production.yml
+      env-vars: |
+        PUBLIC_URL=https://www.example.com
+        LOG_LEVEL=${{ vars.LOG_LEVEL }}
     secrets:
       password: ${{ secrets.GITHUB_TOKEN }}
       remote-host: ${{ secrets.DEPLOY_HOST }}
       remote-port: ${{ secrets.DEPLOY_PORT }}
       remote-user: ${{ secrets.DEPLOY_USER }}
       remote-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+      env-file: ${{ secrets.DEPLOY_ENV_FILE }}
 ```

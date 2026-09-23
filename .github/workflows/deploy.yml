@@ -21,6 +21,10 @@ on:
       stack-file:
         required: true
         type: string
+      env-vars:
+        required: false
+        type: string
+        default: ""
     secrets:
         password:
           required: true
@@ -65,5 +69,9 @@ jobs:
           stack_file: ${{ inputs.stack-file }}
           stack_name: ${{ inputs.stack-name }}
           stack_param: ${{ inputs.tag }}
-          env_file: ${{ secrets.env-file }}
+          # env-vars comes first so the env-file secret wins on a name clash:
+          # docker-stack-deploy exports the lines in order, the last one sticking.
+          env_file: |
+            ${{ inputs.env-vars }}
+            ${{ secrets.env-file }}
           deploy_timeout: 480

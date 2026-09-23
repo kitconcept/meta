@@ -1,0 +1,1 @@
+Added an optional `env-vars` input to `deploy.yml` for non-sensitive environment variables, one `NAME=VALUE` per line. It is combined with the `env-file` secret before being passed to the stack, and the secret wins when a variable is set in both. @ericof
